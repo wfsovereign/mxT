@@ -23,7 +23,7 @@ gulp.task('serve', ['styles','html','script'], function () {
         }
     });
 
-    gulp.watch("src/*.js").on("change", browserSync.reload);
+    gulp.watch("src/js/*.js",['script']).on("change", browserSync.reload);
     gulp.watch("src/styles/*.scss", ['styles']).on("change", browserSync.reload);
     gulp.watch("src/*.html",['html']).on("change", browserSync.reload);
 });

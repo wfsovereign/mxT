@@ -7,7 +7,8 @@ function Matrix(n) {
 }
 
 Matrix.prototype.produceMatrix = function () {
-    this.matrix = this._produceRandomMatrix();
+    this.matrix= this._produceRandomMatrix();
+    //this.matrix = Object.clone(matrix);
     return this.matrix
 };
 
@@ -17,72 +18,97 @@ Matrix.prototype._produceRandomMatrix = function () {
     for (var i = 0; i < this.rankNum; i++) {
         lineMatrix.push([])
     }
-    _.each(lineMatrix,function(line){
+    _.each(lineMatrix, function (line) {
         for (var i = 0; i < length; i++) {
-            line[i] = _.random(0,100);
+            line[i] = _.random(0, 10);
         }
     });
     return lineMatrix
 };
 
 Matrix.prototype._calculateHorizontalLineSummary = function () {
-    var horizontalLineSummary = [];
+    var horizontalLineSummary = [], rankNum = this.rankNum;
+
+    //if(this.matrix == 3){
+    //_.each(this.matrix, function (item) {
+    //    horizontalLineSummary.push(_.reduce(item, function (memo, num) {
+    //        return memo + num
+    //    }, 0))
+    //});
+    //}
+
     _.each(this.matrix, function (item) {
-        horizontalLineSummary.push( _.reduce(item, function (memo, num) {
-            return memo + num
-        },0))
+        for (var i = 0; i < rankNum - 2; i++) {
+            horizontalLineSummary.push((item[i] + item[i + 1] + item[i + 2]));
+        }
     });
+
+
     return horizontalLineSummary;
 };
 
-Matrix.prototype._calculateVerticalLineSummary = function () {
-    var verticalLineSummary = this._initVerticalLineSummary(),self = this;
+Matrix.prototype._transposeMatrix = function () {
+    var transposeMatrix = this._initTransposeMatrix(), rankNum = this.rankNum;
     _.each(this.matrix, function (item) {
-        self._calculateVerticalSummaryOfAccumulation(item,verticalLineSummary);
+        for(var i = 0; i<rankNum;i++){
+            transposeMatrix[i].push(item[i]);
+        }
+    });
+
+    return transposeMatrix
+};
+
+Matrix.prototype._initTransposeMatrix = function (){
+    var transposeMatrix = [];
+    for(var i = 0; i<this.rankNum;i++){
+        transposeMatrix[i] = [];
+    }
+    return transposeMatrix
+};
+
+
+Matrix.prototype._calculateVerticalLineSummary = function () {
+    var verticalLineSummary = this._initVerticalLineSummary(), self = this;
+    _.each(this.matrix, function (item) {
+        self._calculateVerticalSummaryOfAccumulation(item, verticalLineSummary);
     });
     return verticalLineSummary
 };
 
 Matrix.prototype._initVerticalLineSummary = function () {
     var verticalLineSummary = [];
-    for(var i = 0 ;i<this.rankNum;i++){
-        verticalLineSummary[i]= 0 ;
+    for (var i = 0; i < (this.rankNum - 2) * this.rankNum; i++) {
+        verticalLineSummary[i] = 0;
     }
     return verticalLineSummary
 };
 
-Matrix.prototype._calculateVerticalSummaryOfAccumulation = function (item,verticalLineSummary) {
-    var length = item.length;
-    for(var j = 0 ;j<length;j++){
-        verticalLineSummary[j] += item[j] ;
+Matrix.prototype._calculateVerticalSummaryOfAccumulation = function (item, verticalLineSummary) {
+    var length = this.rankNum;
+    for (var j = 0; j < ((length - 2) * length); j++) {
+        verticalLineSummary[j] += item[j];
     }
     return verticalLineSummary
 };
 
 Matrix.prototype._calculateSlashSummary = function () {
-    var slashSummary ;
+    var slashSummary;
 };
 
-Matrix.prototype.initSlashSummary = function () {
-    var slashSummary =[],slashSummaryLength = (this.rankNum-2)*2+1;
-    for(var i = 0 ;i<slashSummaryLength;i++){
-        slashSummary[i]= 0 ;
+Matrix.prototype._initSlashSummary = function () {
+    var slashSummary = [], slashSummaryLength = (this.rankNum - 2) * 2 + 1;
+    for (var i = 0; i < slashSummaryLength; i++) {
+        slashSummary[i] = 0;
     }
     return slashSummary
 };
 
-Matrix.prototype._calculateSlashSummaryOfAccumulation = function (item,slashSummary) {
+Matrix.prototype._calculateSlashSummaryOfAccumulation = function (item, slashSummary) {
     var length = slashSummary.length;
-    for(var j = 0 ;j<length;j++){
-        slashSummary[j] += item[j] ;
+    for (var j = 0; j < length; j++) {
+        slashSummary[j] += item[j];
     }
     return slashSummary
 
 };
 
-
-var matrix = new Matrix(5);
-
-console.log(matrix.produceMatrix());
-console.log(matrix._calculateHorizontalLineSummary());
-console.log(matrix._calculateVerticalLineSummary());
