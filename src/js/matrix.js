@@ -7,7 +7,7 @@ function Matrix(n) {
 }
 
 Matrix.prototype.produceMatrix = function () {
-    this.matrix= this._produceRandomMatrix();
+    this.matrix = this._produceRandomMatrix();
     //this.matrix = Object.clone(matrix);
     return this.matrix
 };
@@ -26,23 +26,19 @@ Matrix.prototype._produceRandomMatrix = function () {
     return lineMatrix
 };
 
-Matrix.prototype._calculateHorizontalLineSummary = function () {
-    var horizontalLineSummary = [], rankNum = this.rankNum;
-
-    //if(this.matrix == 3){
-    //_.each(this.matrix, function (item) {
-    //    horizontalLineSummary.push(_.reduce(item, function (memo, num) {
-    //        return memo + num
-    //    }, 0))
-    //});
-    //}
-
-    _.each(this.matrix, function (item) {
+Matrix.prototype._calculateHorizontalLineSummary = function (matrix, resultMatrix) {
+    var rankNum = this.rankNum;
+    _.each(matrix, function (item) {
         for (var i = 0; i < rankNum - 2; i++) {
-            horizontalLineSummary.push((item[i] + item[i + 1] + item[i + 2]));
+            resultMatrix.push((item[i] + item[i + 1] + item[i + 2]));
         }
     });
+};
 
+Matrix.prototype.getHorizontalLineSummary = function () {
+    //var horizontalLineSummary = this._initHorizontalLineSummary();
+    var horizontalLineSummary = [];
+    this._calculateHorizontalLineSummary(this.matrix, horizontalLineSummary);
 
     return horizontalLineSummary;
 };
@@ -50,58 +46,87 @@ Matrix.prototype._calculateHorizontalLineSummary = function () {
 Matrix.prototype._transposeMatrix = function () {
     var transposeMatrix = this._initTransposeMatrix(), rankNum = this.rankNum;
     _.each(this.matrix, function (item) {
-        for(var i = 0; i<rankNum;i++){
+        for (var i = 0; i < rankNum; i++) {
             transposeMatrix[i].push(item[i]);
         }
     });
-
     return transposeMatrix
 };
 
-Matrix.prototype._initTransposeMatrix = function (){
+Matrix.prototype._initTransposeMatrix = function () {
     var transposeMatrix = [];
-    for(var i = 0; i<this.rankNum;i++){
+    for (var i = 0; i < this.rankNum; i++) {
         transposeMatrix[i] = [];
     }
     return transposeMatrix
 };
 
 
-Matrix.prototype._calculateVerticalLineSummary = function () {
-    var verticalLineSummary = this._initVerticalLineSummary(), self = this;
-    _.each(this.matrix, function (item) {
-        self._calculateVerticalSummaryOfAccumulation(item, verticalLineSummary);
-    });
-    return verticalLineSummary
-};
-
-Matrix.prototype._initVerticalLineSummary = function () {
+Matrix.prototype.getVerticalLineSummary = function () {
+    //var verticalLineSummary = this._initHorizontalLineSummary();
     var verticalLineSummary = [];
-    for (var i = 0; i < (this.rankNum - 2) * this.rankNum; i++) {
-        verticalLineSummary[i] = 0;
-    }
+    this._calculateHorizontalLineSummary(this._transposeMatrix(this.matrix), verticalLineSummary);
     return verticalLineSummary
+
 };
 
-Matrix.prototype._calculateVerticalSummaryOfAccumulation = function (item, verticalLineSummary) {
-    var length = this.rankNum;
-    for (var j = 0; j < ((length - 2) * length); j++) {
-        verticalLineSummary[j] += item[j];
+//Matrix.prototype._calculateVerticalLineSummary = function () {
+//    var verticalLineSummary = this._initVerticalLineSummary(), self = this;
+//    _.each(this.matrix, function (item) {
+//        self._calculateVerticalSummaryOfAccumulation(item, verticalLineSummary);
+//    });
+//    return verticalLineSummary
+//};
+
+Matrix.prototype._initHorizontalLineSummary = function () {
+    var horizontalLineSummary = [];
+    for (var i = 0; i < (this.rankNum - 2) * this.rankNum; i++) {
+        horizontalLineSummary[i] = 0;
     }
-    return verticalLineSummary
+    return horizontalLineSummary
 };
+//
+//Matrix.prototype._calculateVerticalSummaryOfAccumulation = function (item, verticalLineSummary) {
+//    var length = this.rankNum;
+//    for (var j = 0; j < ((length - 2) * length); j++) {
+//        verticalLineSummary[j] += item[j];
+//    }
+//    return verticalLineSummary
+//};
 
 Matrix.prototype._calculateSlashSummary = function () {
-    var slashSummary;
+    var slashSummary = [], rankNum = this.rankNum,a = this.matrix;
+    for (var k = 2; k < rankNum; k++) {
+        for (var i = 0; i < rankNum-2; i++) {
+            slashSummary.push(a[k][i]+a[k-1][i+1]+a[k-2][i+2])
+        }
+    }
+    console.log(slashSummary,"0=0------=");
+    return slashSummary
 };
 
 Matrix.prototype._initSlashSummary = function () {
-    var slashSummary = [], slashSummaryLength = (this.rankNum - 2) * 2 + 1;
+    //var slashSummary = [], slashSummaryLength = (this.rankNum - 2) * 2 + 1;
+    var slashSummary = [], slashSummaryLength = this.rankNum;
     for (var i = 0; i < slashSummaryLength; i++) {
-        slashSummary[i] = 0;
+        slashSummary[i] = [];
     }
     return slashSummary
 };
+
+
+Matrix.prototype._calculateBackSlashSummary = function () {
+    var backSlashSummary = [], rankNum = this.rankNum,a = this.matrix;
+    for (var k = 0; k < rankNum-2; k++) {
+        for (var i = rankNum - 3; i >= 0; i--) {
+            backSlashSummary.push(a[k][i]+a[k+1][i+1]+a[k+2][i+2])
+        }
+    }
+    console.log(backSlashSummary,"0=0=");
+    return backSlashSummary
+};
+
+
 
 Matrix.prototype._calculateSlashSummaryOfAccumulation = function (item, slashSummary) {
     var length = slashSummary.length;
