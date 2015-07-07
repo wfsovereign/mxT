@@ -8,7 +8,6 @@ function Matrix(n) {
 
 Matrix.prototype.produceMatrix = function () {
     this.matrix = this._produceRandomMatrix();
-    //this.matrix = Object.clone(matrix);
     return this.matrix
 };
 
@@ -40,7 +39,7 @@ Matrix.prototype.getHorizontalLineSummary = function () {
     var horizontalLineSummary = [];
     this._calculateHorizontalLineSummary(this.matrix, horizontalLineSummary);
 
-    return horizontalLineSummary;
+    return horizontalLineSummary
 };
 
 Matrix.prototype._transposeMatrix = function () {
@@ -70,13 +69,6 @@ Matrix.prototype.getVerticalLineSummary = function () {
 
 };
 
-//Matrix.prototype._calculateVerticalLineSummary = function () {
-//    var verticalLineSummary = this._initVerticalLineSummary(), self = this;
-//    _.each(this.matrix, function (item) {
-//        self._calculateVerticalSummaryOfAccumulation(item, verticalLineSummary);
-//    });
-//    return verticalLineSummary
-//};
 
 Matrix.prototype._initHorizontalLineSummary = function () {
     var horizontalLineSummary = [];
@@ -85,14 +77,7 @@ Matrix.prototype._initHorizontalLineSummary = function () {
     }
     return horizontalLineSummary
 };
-//
-//Matrix.prototype._calculateVerticalSummaryOfAccumulation = function (item, verticalLineSummary) {
-//    var length = this.rankNum;
-//    for (var j = 0; j < ((length - 2) * length); j++) {
-//        verticalLineSummary[j] += item[j];
-//    }
-//    return verticalLineSummary
-//};
+
 
 Matrix.prototype._calculateSlashSummary = function () {
     var slashSummary = [], rankNum = this.rankNum,a = this.matrix;
@@ -105,8 +90,8 @@ Matrix.prototype._calculateSlashSummary = function () {
     return slashSummary
 };
 
+// not use
 Matrix.prototype._initSlashSummary = function () {
-    //var slashSummary = [], slashSummaryLength = (this.rankNum - 2) * 2 + 1;
     var slashSummary = [], slashSummaryLength = this.rankNum;
     for (var i = 0; i < slashSummaryLength; i++) {
         slashSummary[i] = [];
@@ -128,12 +113,12 @@ Matrix.prototype._calculateBackSlashSummary = function () {
 
 
 
-Matrix.prototype._calculateSlashSummaryOfAccumulation = function (item, slashSummary) {
-    var length = slashSummary.length;
-    for (var j = 0; j < length; j++) {
-        slashSummary[j] += item[j];
-    }
-    return slashSummary
-
-};
+//Matrix.prototype._calculateSlashSummaryOfAccumulation = function (item, slashSummary) {
+//    var length = slashSummary.length;
+//    for (var j = 0; j < length; j++) {
+//        slashSummary[j] += item[j];
+//    }
+//    return slashSummary
+//
+//};
 

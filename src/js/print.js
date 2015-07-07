@@ -25,7 +25,6 @@ function printToTable() {
     console.log('2', matrix._transposeMatrix());
     console.log('2', matrix.getHorizontalLineSummary());
     console.log('2', matrix.getVerticalLineSummary());
-    //console.log('3', matrix._calculateVerticalLineSummary());
 
     var matrixHtml1 = "", matrixHtml2 = "", verticalLineSummaryHtml = "", horizontalLineSummaryHtml = "",
         slashSummaryHtml = "",
