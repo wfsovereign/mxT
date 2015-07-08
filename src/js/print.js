@@ -9,6 +9,7 @@
 $(function () {
     var tableHtml = printToTable();
     $('.table-matrix').append(tableHtml.tableMatrix);
+    $('.max-value').html(tableHtml.maxValue);
     $('.table-transpose-matrix').append(tableHtml.tableTransposeMatrix);
     $('.table-verticalLineSummaryHtml').append(tableHtml.verticalLineSummaryHtml);
     $('.table-horizontalLineSummaryHtml').append(tableHtml.horizontalLineSummaryHtml);
@@ -51,12 +52,11 @@ NS.getGoalArraySummaryHtml = (function () {
 
 function printToTable() {
     var matrix = new Matrix(5);
-
     var originalMatrixHtml, transposeMatrixHtml, verticalLineSummaryHtml, horizontalLineSummaryHtml,
         slashSummaryHtml, backSlashSummaryHtml, originalMatrix = matrix.produceMatrix(),
         transposeMatrix = matrix._transposeMatrix(), verticalLineSummary = matrix.getVerticalLineSummary(),
-        horizontalLineSummary = matrix.getHorizontalLineSummary(), backSlashSummary = matrix._calculateBackSlashSummary(),
-        slashSummary = matrix._calculateSlashSummary();
+        horizontalLineSummary = matrix.getHorizontalLineSummary(), backSlashSummary = matrix.getBackSlashSummary(),
+        slashSummary = matrix.getSlashSummary(),maxValue = matrix.getMaxValue();
 
     originalMatrixHtml = NS.getGoalMatrixHtml(originalMatrix);
     transposeMatrixHtml = NS.getGoalMatrixHtml(transposeMatrix);
@@ -65,14 +65,14 @@ function printToTable() {
     backSlashSummaryHtml = NS.getGoalArraySummaryHtml(backSlashSummary);
     slashSummaryHtml = NS.getGoalArraySummaryHtml(slashSummary);
 
-
     return {
         tableMatrix: originalMatrixHtml,
         tableTransposeMatrix: transposeMatrixHtml,
         verticalLineSummaryHtml: verticalLineSummaryHtml,
         horizontalLineSummaryHtml: horizontalLineSummaryHtml,
         backSlashSummaryHtml: backSlashSummaryHtml,
-        slashSummaryHtml: slashSummaryHtml
+        slashSummaryHtml: slashSummaryHtml,
+        maxValue:maxValue
 
     }
 
