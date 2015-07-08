@@ -4,6 +4,8 @@
 
 function Matrix(n) {
     this.rankNum = n;
+    this.maxRandomNum = 10;
+    this.minRandomNum = 0;
 }
 
 Matrix.prototype.produceMatrix = function () {
@@ -12,14 +14,14 @@ Matrix.prototype.produceMatrix = function () {
 };
 
 Matrix.prototype._produceRandomMatrix = function () {
-    var lineMatrix = [];
+    var lineMatrix = [],maxRandomNum = this.maxRandomNum,minRandomNum = this.minRandomNum;
     var length = this.rankNum;
     for (var i = 0; i < this.rankNum; i++) {
         lineMatrix.push([])
     }
     _.each(lineMatrix, function (line) {
         for (var i = 0; i < length; i++) {
-            line[i] = _.random(0, 10);
+            line[i] = _.random(minRandomNum, maxRandomNum);
         }
     });
     return lineMatrix

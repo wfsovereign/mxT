@@ -8,9 +8,7 @@
 
 var gulp = require('gulp'),
     sass = require('gulp-ruby-sass'),
-    browserSync = require('browser-sync'),
-    rename = require('gulp-rename'),
-    minifycss = require('gulp-minify-css');
+    browserSync = require('browser-sync');
 
 var reload = browserSync.reload;
 
@@ -32,8 +30,6 @@ gulp.task('serve', ['styles','html','script'], function () {
 gulp.task('styles', function () {
     return sass('src/styles/index.scss', {style: 'expanded'})
         .pipe(gulp.dest('./src/css'))
-        //.pipe(rename({suffix:'.min'}))
-        //.pipe(minifycss())
         .pipe(gulp.dest("dist/css"))
         .pipe(reload({stream: true}));
 });
