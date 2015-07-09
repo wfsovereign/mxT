@@ -17,10 +17,9 @@ var DatePlugin = (function (config) {
     var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 
-
     Dates.getTargetJQueryId = function (id) {
         var className = "." + id;
-        return  $(className)
+        return $(className)
     };
 
 
@@ -81,7 +80,7 @@ var DatePlugin = (function (config) {
         var viewTableHtml = "";
         var thisMonthFirstDay = Dates.getThisWeekDay(year, month, 1);
         for (var i = 0; i < thisMonthFirstDay; i++) {
-            viewTableHtml += "<td class='invalid''></td>"
+            viewTableHtml += "<td class='invalid day''></td>"
         }
         return viewTableHtml
 
@@ -91,7 +90,7 @@ var DatePlugin = (function (config) {
         var viewTableHtml = "";
         var thisMonthDay = Dates.getMonthTotalDays(year, month);
         for (var i = 1; i < thisMonthDay + 1; i++) {
-            viewTableHtml += "<td class='valid'>" + i + "</td>";
+            viewTableHtml += "<td class='valid day'>" + i + "</td>";
             if (Dates.getThisWeekDay(year, month, i) === 6) {
                 viewTableHtml += "</tr><tr>"
             }
@@ -117,30 +116,18 @@ var DatePlugin = (function (config) {
 
     //Dates.setCurrentTime(Dates.getCurrentDate)
     Dates.addListenerToDay = function () {
-        $(".valid").on('click',function (e){ //tr:gt(2) td
+        $(".valid").on('click', function (e) { //tr:gt(2) td
             var year = $('#year').val();
             var month = $('#month').val();
             var day = this.innerText || day;
-            console.log(year + "-" + month + "-" + day);
-            console.log('-----');
-            //console.log(year + "-" + month + "-" + day);
 
             targetJqueryId.val(year + "-" + month + "-" + day)
         });
 
-        //$('.invalid').on('click',function (e){
-        //    e.preventDefault();
-        //
-        //});
-        //
-        //$('.invalid').click(function (e){
-        //    e.preventDefault()
-        //});
 
         $('.show-time').keydown(function (e) {
             if (e.keyCode === 13) {
                 console.log(year + "-" + month + "-" + day);
-                //Dates.setTodayDate(Dates.getTodayDate());
                 targetJqueryId.val(year + "-" + month + "-" + day)
             }
         });
@@ -158,20 +145,17 @@ var DatePlugin = (function (config) {
 
     };
     Dates.addListenerToButton = function () {
-        $('#last-month').on('click', function (e){
+        $('#last-month').on('click', function (e) {
             if (globalMonth === 1) {
                 globalYear -= 1;
                 globalMonth = 12
             } else {
                 globalMonth -= 1
             }
-
-            //Dates.closeDatePlugin();
-            //Dates.run();
             $('.date-plugin').remove();
             Dates.showDate();
         });
-        $('#next-month').on('click', function (e){
+        $('#next-month').on('click', function (e) {
             if (globalMonth === 12) {
                 globalYear += 1;
                 globalMonth = 1
@@ -181,7 +165,7 @@ var DatePlugin = (function (config) {
             $('.date-plugin').remove();
             Dates.showDate();
         });
-        $('#plugin-close').on('click', function (e){
+        $('#plugin-close').on('click', function (e) {
             $('.date-plugin').remove();
 
         });
@@ -215,6 +199,97 @@ var DatePlugin = (function (config) {
 
     };
 
+    Dates.nextM = function () {
+        var previouslyMonthFirstDay = Dates.getThisWeekDay(globalYear, globalMonth, 1);
+        var previouslyMonthDay = Dates.getMonthTotalDays(globalYear, globalMonth);
+        var dayInfo = [];
+        if (globalMonth === 1) {
+            globalYear -= 1;
+            globalMonth = 12
+        } else {
+            globalMonth -= 1
+        }
+        var nowMonthFirstDay = Dates.getThisWeekDay(globalYear, globalMonth, 1);
+        var nowMonthDay = Dates.getMonthTotalDays(globalYear, globalYear);
+        if (nowMonthFirstDay < previouslyMonthFirstDay) {
+
+        }
+        for (var i = 0; i < nowMonthFirstDay; i++) {
+            dayInfo.push(0);
+        }
+        for (var j = 0; j < nowMonthDay; j++) {
+            dayInfo.push(j);
+        }
+        console.log(dayInfo);
+        console.log('-----');
+        if(dayInfo.length==0){
+            return
+        }
+        Dates.eachDay(dayInfo,previouslyMonthDay+previouslyMonthFirstDay,nowMonthDay+nowMonthFirstDay)
+
+    };
+
+
+    Dates.eachDay = function (dayInfo, pDayNum, nDayNum) {
+        var day = $('.day');
+        if (nDayNum < pDayNum) {
+            var i = 0;
+            day.each(function () {
+                if (i < nDayNum) {
+                    if (dayInfo[i] === 0) {
+                        $(this).html('');
+                        $(this).addClass('invalid');
+                        $(this).removeClass('valid');
+                    } else {
+                        $(this).html(dayInfo[i]);
+                        $(this).addClass('valid');
+                        $(this).removeClass('invalid');
+                    }
+                } else {
+                    $(this).html('');
+                    $(this).addClass('invalid');
+                    $(this).removeClass('valid');
+                }
+                i++;
+                console.log($(this).html(dayInfo[i]));
+                console.log($(this).hasClass("valid"));
+            })
+        } else {
+            var j = 0;
+            day.each(function () {
+                if(j<pDayNum){
+                    if (dayInfo[j] === 0) {
+                        $(this).html('');
+                        $(this).addClass('invalid');
+                        $(this).removeClass('valid');
+                    } else {
+                        $(this).html(dayInfo[j]);
+                        $(this).addClass('valid');
+                        $(this).removeClass('invalid');
+                    }
+
+                    j++;
+                    //console.log($(this).html(dayInfo[j]));
+                    //console.log($(this).hasClass("valid"));
+                }
+
+            });
+            var newTd = "";
+            for (j; j < nDayNum; j++) {
+
+                newTd += "<td>" + (j + 1) + "</td>"
+            }
+            $('.valid:last').after(newTd);
+
+        }
+
+
+        //day.each(function () {
+        //
+        //    console.log($(this).html());
+        //    console.log($(this).hasClass("valid"));
+        //})
+    };
 
     Dates.lastMonth = function () {
         if (globalMonth === 1) {
@@ -274,10 +349,10 @@ var DatePlugin = (function (config) {
 
     };
 
-    Dates.initDatePlugin =function (){
-        var datePluginHtml="";
+    Dates.initDatePlugin = function () {
+        var datePluginHtml = "";
         datePluginHtml += "<div class='" + frameName + "'>";
-        datePluginHtml += Dates.viewTable(globalYear,globalMonth);
+        datePluginHtml += Dates.viewTable(globalYear, globalMonth);
         datePluginHtml += "</div>";
 
         $('body').append(datePluginHtml);
@@ -297,24 +372,23 @@ var DatePlugin = (function (config) {
     };
 
 
-
     Dates.closeDatePlugin = function () {
         console.log('0000');
         var test = $('#date-box');
-        if(test){
+        if (test) {
             test.remove()
         }
     };
 
-    Dates.pluginHide = function (){
+    Dates.pluginHide = function () {
 
 
     };
 
     Dates.getDatePluginHtml = function () {
-        var datePluginHtml="";
+        var datePluginHtml = "";
         datePluginHtml += "<div class='" + frameName + "'>";
-        datePluginHtml += Dates.viewTable(globalYear,globalMonth);
+        datePluginHtml += Dates.viewTable(globalYear, globalMonth);
         datePluginHtml += "</div>";
         return datePluginHtml
     };
@@ -328,16 +402,15 @@ var DatePlugin = (function (config) {
         return {
             'top': (inputFrameTop + inputFrameHeight) + 'px',
             'left': inputFrameLeft + 'px',
-            'display':'block'
+            'display': 'block'
         }
 
     };
 
 
-    Dates.addCSSToFrame = function (){
+    Dates.addCSSToFrame = function () {
         frameJQuery.css(Dates.getFramePosition());
     };
-
 
 
     Dates.run = function () {
@@ -355,12 +428,15 @@ var DatePlugin = (function (config) {
 }(config));
 
 
-
 $(function () {
     var goal = $('.my');
 
     DatePlugin.showDate();
+    DatePlugin.eachDay();
 
+    $('.click').on('click',function (e){
+       DatePlugin.nextM();
+    });
     //goal.append(DatePlugin.viewTable(year, month));
     //goal.show();
     //DatePlugin.initYM();
@@ -376,8 +452,6 @@ $(function () {
     //console.log(DatePlugin.getDatePluginHtml());
 
     //DatePlugin.closeDatePlugin();
-
-
 
 
     //console.log(   DatePlugin.viewTable(year,month));
@@ -408,7 +482,6 @@ $(function () {
     //
     //$('body').after(html);
     //$('.date-box').css(addCss);
-
 
 
     //goal.append(DatePlugin.addListenerToButton());
