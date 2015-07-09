@@ -39,7 +39,6 @@ Matrix.prototype._calculateHorizontalLineSummary = function (matrix, resultMatri
 Matrix.prototype.getHorizontalLineSummary = function () {
     var horizontalLineSummary = [];
     this._calculateHorizontalLineSummary(this.matrix, horizontalLineSummary);
-
     return horizontalLineSummary
 };
 
@@ -66,7 +65,6 @@ Matrix.prototype.getVerticalLineSummary = function () {
     var verticalLineSummary = [];
     this._calculateHorizontalLineSummary(this._transposeMatrix(this.matrix), verticalLineSummary);
     return verticalLineSummary
-
 };
 
 
