@@ -81,7 +81,7 @@ var DatePlugin = (function (config) {
         var viewTableHtml = "";
         var thisMonthFirstDay = Dates.getThisWeekDay(year, month, 1);
         for (var i = 0; i < thisMonthFirstDay; i++) {
-            viewTableHtml += "<td></td>"
+            viewTableHtml += "<td class='invalid''></td>"
         }
         return viewTableHtml
 
@@ -91,7 +91,7 @@ var DatePlugin = (function (config) {
         var viewTableHtml = "";
         var thisMonthDay = Dates.getMonthTotalDays(year, month);
         for (var i = 1; i < thisMonthDay + 1; i++) {
-            viewTableHtml += "<td>" + i + "</td>";
+            viewTableHtml += "<td class='valid'>" + i + "</td>";
             if (Dates.getThisWeekDay(year, month, i) === 6) {
                 viewTableHtml += "</tr><tr>"
             }
@@ -117,7 +117,7 @@ var DatePlugin = (function (config) {
 
     //Dates.setCurrentTime(Dates.getCurrentDate)
     Dates.addListenerToDay = function () {
-        $("tr:gt(2) td").on('click',function (e){
+        $(".valid").on('click',function (e){ //tr:gt(2) td
             var year = $('#year').val();
             var month = $('#month').val();
             var day = this.innerText || day;
@@ -127,6 +127,16 @@ var DatePlugin = (function (config) {
 
             targetJqueryId.val(year + "-" + month + "-" + day)
         });
+
+        //$('.invalid').on('click',function (e){
+        //    e.preventDefault();
+        //
+        //});
+        //
+        //$('.invalid').click(function (e){
+        //    e.preventDefault()
+        //});
+
         $('.show-time').keydown(function (e) {
             if (e.keyCode === 13) {
                 console.log(year + "-" + month + "-" + day);
@@ -135,11 +145,14 @@ var DatePlugin = (function (config) {
             }
         });
         targetJqueryId.focus(function (e) {
-            Dates.run()
+            //Dates.run()
+            Dates.showDate()
+
         });
 
         targetJqueryId.blur(function (e) {
-            Dates.closeDatePlugin();
+            //Dates.closeDatePlugin();
+            $('.date-plugin').remove();
 
         });
 
@@ -167,7 +180,6 @@ var DatePlugin = (function (config) {
             }
             $('.date-plugin').remove();
             Dates.showDate();
-
         });
         $('#plugin-close').on('click', function (e){
             $('.date-plugin').remove();
@@ -191,11 +203,13 @@ var DatePlugin = (function (config) {
             }
         });
         targetJqueryId.focus(function (e) {
-            Dates.run()
+            //Dates.run()
+            Dates.showDate()
         });
 
         targetJqueryId.blur(function (e) {
-            Dates.closeDatePlugin();
+            //Dates.closeDatePlugin();
+            $('.date-plugin').remove();
 
         });
 
@@ -255,10 +269,24 @@ var DatePlugin = (function (config) {
     };
 
     Dates.initYM = function () {
-        var year = $('#year'), month = $('#month');
-        year.val(globalYear);
-        month.val(globalMonth);
+        $('#year').val(globalYear);
+        $('#month').val(globalMonth);
 
+    };
+
+    Dates.initDatePlugin =function (){
+        var datePluginHtml="";
+        datePluginHtml += "<div class='" + frameName + "'>";
+        datePluginHtml += Dates.viewTable(globalYear,globalMonth);
+        datePluginHtml += "</div>";
+
+        $('body').append(datePluginHtml);
+    };
+    Dates.show = function () {
+        frameJQuery.append(Dates.viewTable(globalYear, globalMonth));
+        Dates.addListenerToDay();
+        Dates.addListenerToButton();
+        Dates.initYM();
     };
 
     Dates.showDate = function () {
@@ -268,12 +296,19 @@ var DatePlugin = (function (config) {
         Dates.initYM();
     };
 
+
+
     Dates.closeDatePlugin = function () {
         console.log('0000');
         var test = $('#date-box');
         if(test){
             test.remove()
         }
+    };
+
+    Dates.pluginHide = function (){
+
+
     };
 
     Dates.getDatePluginHtml = function () {

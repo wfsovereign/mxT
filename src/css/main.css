@@ -62,7 +62,12 @@
 
 .date-box {
   position: fixed;
-  border: 2px solid #beffb9;
-  width: 250px;
-  height: 250px;
+  width: 256px;
+  height: 255px;
+}
+
+.next-link {
+  position: fixed;
+  right: 10%;
+  bottom: 10%;
 }
